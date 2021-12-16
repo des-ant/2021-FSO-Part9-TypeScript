@@ -11,7 +11,7 @@ const calculateBmi = (height: number, mass: number) : Result => {
     BMI <= 24.9 ? 'Normal range' :
     BMI <= 29.9 ? 'Overweight (Pre-obese)' :
     BMI <= 34.9 ? 'Obese (Class I)' :
-    BMI <- 39.9 ? 'Obese (Class III)' :
+    BMI <= 39.9 ? 'Obese (Class II)' :
     'Obese (Class III)'
   );
 }
