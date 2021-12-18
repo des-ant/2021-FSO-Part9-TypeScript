@@ -1,6 +1,5 @@
-type Result = string;
 
-const calculateBmi = (height: number, mass: number) : Result => {
+const calculateBmi = (height: number, mass: number) : string => {
   const heightInM : number = height / 100;
   const BMIFloat: number = mass / (heightInM ** 2);
   const BMI: number = Math.round(BMIFloat * 10) / 10;
