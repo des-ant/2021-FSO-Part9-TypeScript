@@ -1,3 +1,29 @@
+/*
+Input: npm run calculateBmi 180 91
+Output: Overweight (Pre-obese)
+
+Input: npm run calculateBmi 180 74
+Output: Normal range
+*/
+
+interface BMIValues {
+  height: number;
+  mass: number;
+}
+
+const parseArgumentsBMI = (args: Array<string>): BMIValues => {
+  if (args.length < 4) throw new Error('Not enough arguments');
+  if (args.length > 4) throw new Error('Too many arguments');
+
+  if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
+    return {
+      height: Number(args[2]),
+      mass: Number(args[3])
+    }
+  } else {
+    throw new Error('Provided values were not numbers!');
+  }
+}
 
 const calculateBmi = (height: number, mass: number) : string => {
   const heightInM : number = height / 100;
@@ -15,4 +41,13 @@ const calculateBmi = (height: number, mass: number) : string => {
   );
 }
 
-console.log(calculateBmi(180, 74));
+try {
+  const { height, mass } = parseArgumentsBMI(process.argv);
+  console.log(calculateBmi(height, mass));
+} catch (error: unknown) {
+  let errorMessage = 'Something bad happened.'
+  if (error instanceof Error) {
+    errorMessage += ' Error: ' + error.message;
+  }
+  console.log(errorMessage);
+}
