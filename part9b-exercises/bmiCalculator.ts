@@ -8,26 +8,51 @@ Output: Normal range
 
 interface BMIValues {
   height: number;
-  mass: number;
+  weight: number;
+}
+
+interface BMIQueryRequest {
+  height: string;
+  weight: string;
+}
+
+export interface BMIQueryResponse {
+  height: number;
+  weight: number;
+  bmi: string;
 }
 
 const parseArgumentsBMI = (args: Array<string>): BMIValues => {
   if (args.length < 4) throw new Error('Not enough arguments');
-  if (args.length > 4) throw new Error('Too many arguments');
 
   if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
     return {
       height: Number(args[2]),
-      mass: Number(args[3])
+      weight: Number(args[3])
     }
   } else {
     throw new Error('Provided values were not numbers!');
   }
 }
 
-const calculateBmi = (height: number, mass: number) : string => {
+const parseQueryBMI = (req: BMIQueryRequest): BMIValues => {
+  if (!req.height || !req.weight) {
+    throw new Error('malformatted parameters');
+  }
+
+  if (!isNaN(Number(req.height)) && !isNaN(Number(req.weight))) {
+    return {
+      height: Number(req.height),
+      weight: Number(req.weight)
+    }
+  } else {
+    throw new Error('malformatted parameters');
+  }
+}
+
+const calculateBmi = (height: number, weight: number): string => {
   const heightInM : number = height / 100;
-  const BMIFloat: number = mass / (heightInM ** 2);
+  const BMIFloat: number = weight / (heightInM ** 2);
   const BMI: number = Math.round(BMIFloat * 10) / 10;
   return (
     BMI < 16.0 ? 'Underweight (Severe thinness)' :
@@ -42,12 +67,22 @@ const calculateBmi = (height: number, mass: number) : string => {
 }
 
 try {
-  const { height, mass } = parseArgumentsBMI(process.argv);
-  console.log(calculateBmi(height, mass));
+  const { height, weight } = parseArgumentsBMI(process.argv);
+  console.log(calculateBmi(height, weight));
 } catch (error: unknown) {
   let errorMessage = 'Something bad happened.'
   if (error instanceof Error) {
     errorMessage += ' Error: ' + error.message;
   }
   console.log(errorMessage);
+}
+
+export const calulateBmiQuery = (query: BMIQueryRequest): BMIQueryResponse => {
+  const { height, weight } = parseQueryBMI(query);
+  const bmi: string = calculateBmi(height, weight);
+  return {
+    height,
+    weight,
+    bmi
+  }
 }
