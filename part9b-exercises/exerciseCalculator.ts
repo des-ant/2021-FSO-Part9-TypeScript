@@ -22,36 +22,15 @@ Output:
 
 interface exerciseValues {
   target: number;
-  dailyExerciseHours: Array<number>;
+  daily_exercises: Array<number>;
 }
 
-const parseArgumentsExercise = (args: Array<string>): exerciseValues => {
-  if (args.length < 4) throw new Error('Not enough arguments');
+interface exerciseInput {
+  target: unknown;
+  daily_exercises: unknown;
+}
 
-  // Ignore first two arguments that are required for the npm script to run this
-  // program
-  const [, , targetInput, ...inputList] = args;
-
-  if(isNaN(Number(targetInput))) {
-    throw new Error('Provided values were not numbers!');
-  }
-
-  const target = Number(targetInput);
-
-  const dailyExerciseHours: Array<number> = inputList.map(val => {
-    if(isNaN(Number(val))) {
-      throw new Error('Provided values were not numbers!');
-    }
-    return Number(val);
-  });
-
-  return {
-    target,
-    dailyExerciseHours
-  };
-};
-
-interface exerciseResult {
+export interface exerciseResult {
   periodLength: number;
   trainingDays: number;
   success: boolean;
@@ -61,12 +40,50 @@ interface exerciseResult {
   average: number;
 }
 
-const calculateExercises = (target: number, dailyExerciseHours: Array<number>): exerciseResult => {
-  const periodLength: number = dailyExerciseHours.length;
-  const trainingDays: number = dailyExerciseHours
+const parseExercise = (req: exerciseInput): exerciseValues => {
+  if (!req.target || !req.daily_exercises) throw new Error('parameters missing');
+  
+  const targetInput = req.target;
+  const inputList = req.daily_exercises;
+
+  if(isNaN(Number(targetInput)) || !Array.isArray(inputList)) {
+    throw new Error('malformatted parameters');
+  }
+
+  const target = Number(targetInput);
+
+  const daily_exercises: Array<number> = inputList.map(val => {
+    if(isNaN(Number(val))) {
+      throw new Error('malformatted parameters');
+    }
+    return Number(val);
+  });
+
+  return {
+    target,
+    daily_exercises
+  };
+};
+
+const parseArgumentsExercise = (args: Array<string>): exerciseValues => {
+  if (args.length < 4) throw new Error('Not enough arguments');
+
+  // Ignore first two arguments that are required for the npm script to run this
+  // program
+  const [, , targetInput, ...inputList] = args;
+
+  return parseExercise({
+    target: targetInput,
+    daily_exercises: inputList
+  });
+};
+
+const calculateExercises = (target: number, daily_exercises: Array<number>): exerciseResult => {
+  const periodLength: number = daily_exercises.length;
+  const trainingDays: number = daily_exercises
     .filter(dailyHour => dailyHour > 0)
     .length;
-  const totalHours: number = dailyExerciseHours
+  const totalHours: number = daily_exercises
     .reduce((a, b) => a + b, 0);
   const average: number = totalHours / periodLength;
   const success: boolean = average >= target;
@@ -75,9 +92,9 @@ const calculateExercises = (target: number, dailyExerciseHours: Array<number>): 
     average / target >= 0.75 ? 2 :
     1;
   const ratingDescription: string = 
-    rating === 3 ? 'good job' :
+    rating === 3 ? 'good' :
     rating === 2 ? 'not too bad but could be better' :
-    'need to work on it';
+    'bad';
 
   return {
     periodLength,
@@ -90,10 +107,9 @@ const calculateExercises = (target: number, dailyExerciseHours: Array<number>): 
   };
 };
 
-
 try {
-  const { target, dailyExerciseHours } = parseArgumentsExercise(process.argv);
-  console.log(calculateExercises(target, dailyExerciseHours));
+  const { target, daily_exercises } = parseArgumentsExercise(process.argv);
+  console.log(calculateExercises(target, daily_exercises));
 } catch (error: unknown) {
   let errorMessage = 'Something bad happened.';
   if (error instanceof Error) {
@@ -101,3 +117,8 @@ try {
   }
   console.log(errorMessage);
 }
+
+export const calculateExercisesRequest = (req: exerciseInput): exerciseResult => {
+  const { target, daily_exercises } = parseExercise(req);
+  return calculateExercises(target, daily_exercises);
+};

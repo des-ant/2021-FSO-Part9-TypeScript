@@ -1,0 +1,35 @@
+POST http://localhost:3002/exercises/ HTTP/1.1
+content-type: application/json
+
+{
+  "daily_exercises": [1, 0, 2, 0, 3, 0, 2.5],
+  "target": 2.5
+}
+
+###
+# {
+#     "periodLength": 7,
+#     "trainingDays": 4,
+#     "success": false,
+#     "rating": 1,
+#     "ratingDescription": "bad",
+#     "target": 2.5,
+#     "average": 1.2142857142857142
+# }
+
+###
+POST http://localhost:3002/exercises/ HTTP/1.1
+content-type: application/json
+
+{
+  "daily_exercises": [1, 0, "a", 0, 3, 0, 2.5],
+  "target": 2.5
+}
+
+###
+POST http://localhost:3002/exercises/ HTTP/1.1
+content-type: application/json
+
+{
+  "daily_exercises": [1, 0, "a", 0, 3, 0, 2.5]
+}
