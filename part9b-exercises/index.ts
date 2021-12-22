@@ -10,12 +10,12 @@ app.get('/hello', (_req, res) => {
 app.get('/bmi', (req, res) => {
   console.log(req.query);
   try {
-    const height: string = String(req.query.height);
-    const weight: string = String(req.query.weight);
+    const height = String(req.query.height);
+    const weight = String(req.query.weight);
     const response: BMIQueryResponse = calulateBmiQuery({ height, weight });
     return res.json(response);
   } catch (error: unknown) {
-    let errorMessage = 'Something bad happened.'
+    let errorMessage = 'Something bad happened.';
     if (error instanceof Error) {
       errorMessage = error.message;
     }

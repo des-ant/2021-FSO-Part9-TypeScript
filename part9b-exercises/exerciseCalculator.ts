@@ -36,20 +36,20 @@ const parseArgumentsExercise = (args: Array<string>): exerciseValues => {
     throw new Error('Provided values were not numbers!');
   }
 
-  const target: number = Number(targetInput);
+  const target = Number(targetInput);
 
   const dailyExerciseHours: Array<number> = inputList.map(val => {
     if(isNaN(Number(val))) {
       throw new Error('Provided values were not numbers!');
     }
     return Number(val);
-  })
+  });
 
   return {
     target,
     dailyExerciseHours
-  }
-}
+  };
+};
 
 interface exerciseResult {
   periodLength: number;
@@ -67,7 +67,7 @@ const calculateExercises = (target: number, dailyExerciseHours: Array<number>): 
     .filter(dailyHour => dailyHour > 0)
     .length;
   const totalHours: number = dailyExerciseHours
-    .reduce((a, b) => a + b, 0)
+    .reduce((a, b) => a + b, 0);
   const average: number = totalHours / periodLength;
   const success: boolean = average >= target;
   const rating: number =
@@ -77,7 +77,7 @@ const calculateExercises = (target: number, dailyExerciseHours: Array<number>): 
   const ratingDescription: string = 
     rating === 3 ? 'good job' :
     rating === 2 ? 'not too bad but could be better' :
-    'need to work on it'
+    'need to work on it';
 
   return {
     periodLength,
@@ -87,15 +87,15 @@ const calculateExercises = (target: number, dailyExerciseHours: Array<number>): 
     ratingDescription,
     target,
     average
-  }
-}
+  };
+};
 
 
 try {
   const { target, dailyExerciseHours } = parseArgumentsExercise(process.argv);
   console.log(calculateExercises(target, dailyExerciseHours));
 } catch (error: unknown) {
-  let errorMessage = 'Something bad happened.'
+  let errorMessage = 'Something bad happened.';
   if (error instanceof Error) {
     errorMessage += ' Error: ' + error.message;
   }

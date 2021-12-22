@@ -29,11 +29,11 @@ const parseArgumentsBMI = (args: Array<string>): BMIValues => {
     return {
       height: Number(args[2]),
       weight: Number(args[3])
-    }
+    };
   } else {
     throw new Error('Provided values were not numbers!');
   }
-}
+};
 
 const parseQueryBMI = (req: BMIQueryRequest): BMIValues => {
   if (!req.height || !req.weight) {
@@ -44,11 +44,11 @@ const parseQueryBMI = (req: BMIQueryRequest): BMIValues => {
     return {
       height: Number(req.height),
       weight: Number(req.weight)
-    }
+    };
   } else {
     throw new Error('malformatted parameters');
   }
-}
+};
 
 const calculateBmi = (height: number, weight: number): string => {
   const heightInM : number = height / 100;
@@ -64,13 +64,13 @@ const calculateBmi = (height: number, weight: number): string => {
     BMI <= 39.9 ? 'Obese (Class II)' :
     'Obese (Class III)'
   );
-}
+};
 
 try {
   const { height, weight } = parseArgumentsBMI(process.argv);
   console.log(calculateBmi(height, weight));
 } catch (error: unknown) {
-  let errorMessage = 'Something bad happened.'
+  let errorMessage = 'Something bad happened.';
   if (error instanceof Error) {
     errorMessage += ' Error: ' + error.message;
   }
@@ -84,5 +84,5 @@ export const calulateBmiQuery = (query: BMIQueryRequest): BMIQueryResponse => {
     height,
     weight,
     bmi
-  }
-}
+  };
+};
