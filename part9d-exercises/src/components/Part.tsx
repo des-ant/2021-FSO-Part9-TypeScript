@@ -42,6 +42,18 @@ const Part = ({ part }: { part: CoursePart }) => {
           submit to {part.exerciseSubmissionLink}
         </p>
       );
+    case 'special':
+      // TypeScript knows that we can use name, exerciseCount, description and
+      // requirements
+      return (
+        <p>
+          <b>{part.name} {part.exerciseCount}</b>
+          <br />
+          <i>{part.description}</i>
+          <br />
+          required skills: {part.requirements.join(', ')}
+        </p>
+      );
     default:
       return assertNever(part);
   }
