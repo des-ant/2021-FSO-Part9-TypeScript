@@ -43,3 +43,10 @@ export const setPatientList = (patientListFromApi: Patient[]): Action => {
     payload: patientListFromApi
   };
 };
+
+export const addPatient = (newPatient: Patient): Action => {
+  return {
+    type: "ADD_PATIENT",
+    payload: newPatient
+  };
+};
