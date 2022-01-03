@@ -4,7 +4,7 @@ import axios from "axios";
 
 import { apiBaseUrl } from "../constants";
 import { Patient } from "../types";
-import { Header, Segment } from 'semantic-ui-react';
+import { Header, Icon, Segment } from 'semantic-ui-react';
 // import { useStateValue } from "../state";
 
 const PatientInfo = () => {
@@ -19,7 +19,6 @@ const PatientInfo = () => {
           `${apiBaseUrl}/patients/${id}`
         );
         setPatient(patientFound);
-        // console.log(patientFound.name);
       } catch (e) {
         console.error(e.response?.data || 'Unknown Error');
         setError(e.response?.data || 'Unknown error');
@@ -38,9 +37,19 @@ const PatientInfo = () => {
     );
   }
 
+  const getGenderIcon = (gender: string) => {
+    if (gender === 'male') {
+      return <Icon name='mars' />;
+    } else if (gender === 'female') {
+      return <Icon name='venus' />;
+    } else {
+      return <Icon name='genderless' />;
+    }
+  };
+
   return (
     <div className="App">
-      <Header as="h2">{patient.name}</Header>
+      <Header as="h2">{patient.name} {getGenderIcon(patient.gender)}</Header>
       <p>
         ssn: {patient.ssn}
         <br />
