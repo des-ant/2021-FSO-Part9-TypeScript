@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from "axios";
 
 import { apiBaseUrl } from "../constants";
-import { Patient } from "../types";
+import { Patient, Entry } from "../types";
 import { Header, Icon, Segment } from 'semantic-ui-react';
 // import { useStateValue } from "../state";
 
@@ -47,6 +47,29 @@ const PatientInfo = () => {
     }
   };
 
+  const renderEntries = (entries: Entry[]) => {
+    if (entries && entries.length) {
+      return (
+        <div>
+          <h3>entries</h3>
+          {entries.map(entry => (
+            <p key={entry.id}>
+              {entry.date} <i>{entry.description}</i>
+              {entry.diagnosisCodes &&
+              <ul>
+                {entry.diagnosisCodes?.map(code => (
+                  <li key={code}>{code}</li>
+                ))}
+              </ul>
+              }
+            </p>
+          ))}
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="App">
       <Header as="h2">{patient.name} {getGenderIcon(patient.gender)}</Header>
@@ -55,6 +78,7 @@ const PatientInfo = () => {
         <br />
         occupation: {patient.occupation}
       </p>
+      {renderEntries(patient.entries)}
     </div>
   );
 };
