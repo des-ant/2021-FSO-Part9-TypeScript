@@ -3,14 +3,15 @@ import { useParams } from 'react-router-dom';
 import axios from "axios";
 
 import { apiBaseUrl } from "../constants";
-import { Patient, Entry } from "../types";
+import { Patient, Entry, Diagnosis } from "../types";
 import { Header, Icon, Segment } from 'semantic-ui-react';
-// import { useStateValue } from "../state";
+import { useStateValue } from "../state";
 
 const PatientInfo = () => {
   const { id } = useParams<{ id: string }>();
   const [error, setError] = React.useState<string | undefined>();
   const [patient, setPatient] = React.useState<Patient | undefined>();
+  const [{ diagnoses }] = useStateValue();
 
   React.useEffect(() => {
     const getPatient = async () => {
@@ -47,6 +48,19 @@ const PatientInfo = () => {
     }
   };
 
+  const renderDiagnosis = (diagnosisCode: string) => {
+    const diagnosisMatch: Diagnosis | undefined = Object.values(diagnoses).find((diagnosis: Diagnosis) => diagnosis.code === diagnosisCode);
+
+    if (diagnosisMatch) {
+      return (
+        <p>
+          {`${diagnosisMatch.code} ${diagnosisMatch.name}`}
+        </p>
+      );
+    }
+    return null;
+  };
+
   const renderEntries = (entries: Entry[]) => {
     if (entries && entries.length) {
       return (
@@ -58,7 +72,9 @@ const PatientInfo = () => {
               {entry.diagnosisCodes &&
               <ul>
                 {entry.diagnosisCodes?.map(code => (
-                  <li key={code}>{code}</li>
+                  <li key={code}>
+                    {renderDiagnosis(code)}
+                  </li>
                 ))}
               </ul>
               }
