@@ -6,6 +6,7 @@ import { apiBaseUrl } from "../constants";
 import { Patient, Entry, Diagnosis } from "../types";
 import { Header, Icon, Segment } from 'semantic-ui-react';
 import { useStateValue } from "../state";
+import EntryDetails from '../components/EntryDetails';
 
 const PatientInfo = () => {
   const { id } = useParams<{ id: string }>();
@@ -67,18 +68,14 @@ const PatientInfo = () => {
         <div>
           <h3>entries</h3>
           {entries.map(entry => (
-            <p key={entry.id}>
-              {entry.date} <i>{entry.description}</i>
-              {entry.diagnosisCodes &&
-              <ul>
-                {entry.diagnosisCodes?.map(code => (
-                  <li key={code}>
-                    {renderDiagnosis(code)}
-                  </li>
-                ))}
-              </ul>
-              }
-            </p>
+            <div key={entry.id}>
+              <EntryDetails entry={entry} />
+              {entry.diagnosisCodes?.map(code => (
+                <li key={code}>
+                  {renderDiagnosis(code)}
+                </li>
+              ))}
+            </div>
           ))}
         </div>
       );
