@@ -1,5 +1,10 @@
 import React from 'react';
 import { Entry } from '../types';
+import {
+  HealthCheckEntry,
+  HospitalEntry,
+  OccupationalHealthcareEntry
+} from '.';
 
 const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
   /**
@@ -11,29 +16,13 @@ const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
     );
   };
 
-  switch(entry.type) {
+  switch (entry.type) {
     case "HealthCheck":
-      return (
-        <div>
-          <h3>{entry.date} {entry.type}</h3>
-          <p><i>{entry.description}</i></p>
-          {entry.healthCheckRating}
-        </div>
-      );
+      return <HealthCheckEntry entry={entry} />;
     case "Hospital":
-      return (
-        <div>
-          <h3>{entry.date} {entry.type}</h3>
-          <p><i>{entry.description}</i></p>
-        </div>
-      );
+      return <HospitalEntry entry={entry} />;
     case "OccupationalHealthcare":
-      return (
-        <div>
-          <h3>{entry.date} {entry.type} {entry.employerName}</h3>
-          <p><i>{entry.description}</i></p>
-        </div>
-      );
+      return <OccupationalHealthcareEntry entry={entry} />;
     default:
       return assertNever(entry);
   }

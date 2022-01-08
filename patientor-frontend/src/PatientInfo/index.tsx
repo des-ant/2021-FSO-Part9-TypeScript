@@ -3,16 +3,14 @@ import { useParams } from 'react-router-dom';
 import axios from "axios";
 
 import { apiBaseUrl } from "../constants";
-import { Patient, Entry, Diagnosis } from "../types";
+import { Patient, Entry } from "../types";
 import { Header, Icon, Segment } from 'semantic-ui-react';
-import { useStateValue } from "../state";
-import EntryDetails from '../components/EntryDetails';
+import EntryDetails from '../Entry/EntryDetails';
 
 const PatientInfo = () => {
   const { id } = useParams<{ id: string }>();
   const [error, setError] = React.useState<string | undefined>();
   const [patient, setPatient] = React.useState<Patient | undefined>();
-  const [{ diagnoses }] = useStateValue();
 
   React.useEffect(() => {
     const getPatient = async () => {
@@ -40,26 +38,14 @@ const PatientInfo = () => {
   }
 
   const getGenderIcon = (gender: string) => {
-    if (gender === 'male') {
-      return <Icon name='mars' />;
-    } else if (gender === 'female') {
-      return <Icon name='venus' />;
-    } else {
-      return <Icon name='genderless' />;
+    switch (gender){
+      case 'male':
+        return <Icon name='mars' />;
+      case 'female':
+        return <Icon name='venus' />;
+      default:
+        return <Icon name='genderless' />;
     }
-  };
-
-  const renderDiagnosis = (diagnosisCode: string) => {
-    const diagnosisMatch: Diagnosis | undefined = Object.values(diagnoses).find((diagnosis: Diagnosis) => diagnosis.code === diagnosisCode);
-
-    if (diagnosisMatch) {
-      return (
-        <p>
-          {`${diagnosisMatch.code} ${diagnosisMatch.name}`}
-        </p>
-      );
-    }
-    return null;
   };
 
   const renderEntries = (entries: Entry[]) => {
@@ -70,11 +56,6 @@ const PatientInfo = () => {
           {entries.map(entry => (
             <div key={entry.id}>
               <EntryDetails entry={entry} />
-              {entry.diagnosisCodes?.map(code => (
-                <li key={code}>
-                  {renderDiagnosis(code)}
-                </li>
-              ))}
             </div>
           ))}
         </div>
