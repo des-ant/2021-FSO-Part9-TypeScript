@@ -1,10 +1,11 @@
 import React from 'react';
-import { useStateValue } from "../state";
 import { Diagnosis } from '../types';
 import { List } from 'semantic-ui-react';
 
-export const EntryDiagnosis: React.FC<{ diagnosisCodes: string[] | undefined }> = ({ diagnosisCodes }) => {
-  const [{ diagnoses }] = useStateValue();
+export const EntryDiagnosis: React.FC<{
+  diagnosisCodes: string[] | undefined,
+  diagnoses: Diagnosis[]
+}> = ({ diagnosisCodes, diagnoses }) => {
 
   if (!diagnosisCodes || !diagnosisCodes.length) {
     return null;

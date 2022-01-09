@@ -1,12 +1,15 @@
 import React from 'react';
-import { Entry } from '../types';
+import { Entry, Diagnosis } from '../types';
 import {
   HealthCheckEntry,
   HospitalEntry,
   OccupationalHealthcareEntry
 } from '.';
 
-const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
+const EntryDetails: React.FC<{
+  entry: Entry,
+  diagnoses: Diagnosis[]
+}> = ({ entry, diagnoses }) => {
   /**
    * Helper function for exhaustive type checking
    */
@@ -18,11 +21,11 @@ const EntryDetails: React.FC<{ entry: Entry }> = ({ entry }) => {
 
   switch (entry.type) {
     case "HealthCheck":
-      return <HealthCheckEntry entry={entry} />;
+      return <HealthCheckEntry entry={entry} diagnoses={diagnoses} />;
     case "Hospital":
-      return <HospitalEntry entry={entry} />;
+      return <HospitalEntry entry={entry} diagnoses={diagnoses} />;
     case "OccupationalHealthcare":
-      return <OccupationalHealthcareEntry entry={entry} />;
+      return <OccupationalHealthcareEntry entry={entry} diagnoses={diagnoses} />;
     default:
       return assertNever(entry);
   }
