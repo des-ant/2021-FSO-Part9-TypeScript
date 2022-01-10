@@ -109,7 +109,7 @@ const isHealthRating = (param: any): param is HealthCheckRating => {
 };
 
 const parseHealthRating = (healthRating: unknown): HealthCheckRating => {
-  if (!healthRating || !isHealthRating(healthRating)) {
+  if (!healthRating && healthRating !== 0 || !isHealthRating(healthRating)) {
     throw new Error('Incorrect or missing health check rating: ' + healthRating);
   }
   return healthRating;
