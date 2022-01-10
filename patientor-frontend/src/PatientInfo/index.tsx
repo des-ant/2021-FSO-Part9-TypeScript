@@ -3,12 +3,11 @@ import { useParams } from 'react-router-dom';
 import axios from "axios";
 
 import { apiBaseUrl } from "../constants";
-import { Patient, Entry } from "../types";
+import { Patient, Entry, EntryWithoutId } from "../types";
 import { Header, Icon, Segment, Button } from 'semantic-ui-react';
 import EntryDetails from '../Entry/EntryDetails';
 import AddEntryModal from '../AddEntryModal';
-import { PatientFormValues } from "../AddEntryModal/AddEntryForm";
-import { useStateValue, addPatient } from "../state";
+import { useStateValue, addEntry } from "../state";
 
 const PatientInfo = () => {
   const { id } = useParams<{ id: string }>();
@@ -77,13 +76,13 @@ const PatientInfo = () => {
     return null;
   };
 
-  const submitNewPatient = async (values: PatientFormValues) => {
+  const submitNewEntry = async (values: EntryWithoutId) => {
     try {
-      const { data: newPatient } = await axios.post<Patient>(
-        `${apiBaseUrl}/patients`,
+      const { data: newEntry } = await axios.post<Entry>(
+        `${apiBaseUrl}/patients/${id}/entries`,
         values
       );
-      dispatch(addPatient(newPatient));
+      dispatch(addEntry(newEntry, patient));
       closeModal();
     } catch (e) {
       console.error(e.response?.data || 'Unknown Error');
@@ -103,7 +102,7 @@ const PatientInfo = () => {
       <div style={{ marginTop: '15px' }}>
         <AddEntryModal
           modalOpen={modalOpen}
-          onSubmit={submitNewPatient}
+          onSubmit={submitNewEntry}
           error={error}
           onClose={closeModal}
           diagnoses={Object.values(diagnoses)}

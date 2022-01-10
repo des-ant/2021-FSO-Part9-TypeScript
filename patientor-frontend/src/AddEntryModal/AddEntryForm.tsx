@@ -7,16 +7,10 @@ import {
   DiagnosisSelection,
   NumberField
 } from "../AddPatientModal/FormField";
-import { Gender, Patient, Diagnosis } from "../types";
-
-/*
- * use type Patient, but omit id and entries,
- * because those are irrelevant for new patient object.
- */
-export type PatientFormValues = Omit<Patient, "id" | "entries">;
+import { Diagnosis, EntryWithoutId } from "../types";
 
 interface Props {
-  onSubmit: (values: PatientFormValues) => void;
+  onSubmit: (values: EntryWithoutId) => void;
   onCancel: () => void;
   diagnoses: Diagnosis[];
 }
@@ -26,27 +20,28 @@ export const AddEntryForm = ({ onSubmit, onCancel, diagnoses } : Props ) => {
   return (
     <Formik
       initialValues={{
-        name: "",
-        ssn: "",
-        dateOfBirth: "",
-        occupation: "",
-        gender: Gender.Other
+        description: "",
+        date: "",
+        specialist: "",
+        diagnosisCodes: [],
+        type: "HealthCheck",
+        healthCheckRating: 0
       }}
       onSubmit={onSubmit}
       validate={values => {
         const requiredError = "Field is required";
         const errors: { [field: string]: string } = {};
-        if (!values.name) {
-          errors.name = requiredError;
+        if (!values.description) {
+          errors.description = requiredError;
         }
-        if (!values.ssn) {
-          errors.ssn = requiredError;
+        if (!values.date) {
+          errors.date = requiredError;
         }
-        if (!values.dateOfBirth) {
-          errors.dateOfBirth = requiredError;
+        if (!values.specialist) {
+          errors.specialist = requiredError;
         }
-        if (!values.occupation) {
-          errors.occupation = requiredError;
+        if (!values.type) {
+          errors.type = requiredError;
         }
         return errors;
       }}
@@ -63,7 +58,7 @@ export const AddEntryForm = ({ onSubmit, onCancel, diagnoses } : Props ) => {
             <Field
               label="Date Of Entry"
               placeholder="YYYY-MM-DD"
-              name="dateOfEntry"
+              name="date"
               component={TextField}
             />
             <Field

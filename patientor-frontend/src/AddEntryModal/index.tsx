@@ -1,12 +1,12 @@
 import React from 'react';
 import { Modal, Segment } from 'semantic-ui-react';
-import AddEntryForm, { PatientFormValues } from './AddEntryForm';
-import { Diagnosis } from "../types";
+import AddEntryForm from './AddEntryForm';
+import { Diagnosis, EntryWithoutId } from "../types";
 
 interface Props {
   modalOpen: boolean;
   onClose: () => void;
-  onSubmit: (values: PatientFormValues) => void;
+  onSubmit: (values: EntryWithoutId) => void;
   error?: string;
   diagnoses: Diagnosis[];
 }
