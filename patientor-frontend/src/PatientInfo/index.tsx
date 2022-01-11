@@ -7,13 +7,12 @@ import { Patient, Entry, EntryWithoutId } from "../types";
 import { Header, Icon, Segment, Button } from 'semantic-ui-react';
 import EntryDetails from '../Entry/EntryDetails';
 import AddEntryModal from '../AddEntryModal';
-import { useStateValue, addEntry } from "../state";
+import { useStateValue, addEntry, setPatient } from "../state";
 
 const PatientInfo = () => {
   const { id } = useParams<{ id: string }>();
   const [error, setError] = React.useState<string | undefined>();
-  const [patient, setPatient] = React.useState<Patient | undefined>();
-  const [{ diagnoses }, dispatch] = useStateValue();
+  const [{ diagnoses, patient }, dispatch] = useStateValue();
   
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
 
@@ -30,15 +29,13 @@ const PatientInfo = () => {
         const { data: patientFound } = await axios.get<Patient>(
           `${apiBaseUrl}/patients/${id}`
         );
-        setPatient(patientFound);
+        dispatch(setPatient(patientFound));
       } catch (e) {
-        console.error(e.response?.data || 'Unknown Error');
-        setError(e.response?.data || 'Unknown error');
+        console.error(e);
       }
     };
-
     void getPatient();
-  }, [patient]);
+  }, [dispatch]);
 
   if (!patient) {
     return (
@@ -82,7 +79,7 @@ const PatientInfo = () => {
         `${apiBaseUrl}/patients/${id}/entries`,
         values
       );
-      dispatch(addEntry(newEntry, patient));
+      dispatch(addEntry(newEntry, Object.values(patient)[0]));
       closeModal();
     } catch (e) {
       console.error(e.response?.data || 'Unknown Error');
@@ -92,13 +89,17 @@ const PatientInfo = () => {
 
   return (
     <div className="App">
-      <Header as="h2">{patient.name} {getGenderIcon(patient.gender)}</Header>
-      <p>
-        ssn: {patient.ssn}
-        <br />
-        occupation: {patient.occupation}
-      </p>
-      {renderEntries(patient.entries)}
+      {Object.values(patient).map((p: Patient) => (
+        <div key={p.id}>
+          <Header as="h2">{p.name} {getGenderIcon(p.gender)}</Header>
+          <p>
+            ssn: {p.ssn}
+            <br />
+            occupation: {p.occupation}
+          </p>
+          {renderEntries(p.entries)}
+        </div>
+      ))}
       <div style={{ marginTop: '15px' }}>
         <AddEntryModal
           modalOpen={modalOpen}

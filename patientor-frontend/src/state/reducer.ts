@@ -20,6 +20,10 @@ export type Action =
         newEntry: Entry;
         patient: Patient;
       };
+    }
+  | {
+      type: "SET_PATIENT";
+      payload: Patient;
     };
 
 export const reducer = (state: State, action: Action): State => {
@@ -66,6 +70,13 @@ export const reducer = (state: State, action: Action): State => {
           }
         }
       };
+    case "SET_PATIENT":
+      return {
+        ...state,
+        patient: {
+          [action.payload.id]: action.payload
+        }
+      };
     default:
       return state;
   }
@@ -99,5 +110,12 @@ export const addEntry = (newEntry: Entry, patient: Patient): Action => {
       newEntry,
       patient
     }
+  };
+};
+
+export const setPatient = (patient: Patient): Action => {
+  return {
+    type: "SET_PATIENT",
+    payload: patient
   };
 };
