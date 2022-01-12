@@ -59,14 +59,22 @@ export const reducer = (state: State, action: Action): State => {
         }
       };
     case "ADD_ENTRY":
+      const patientId = action.payload.patient.id;
+      const patientData = state.patient[patientId];
+      const newEntry = action.payload.newEntry;
       return {
         ...state,
         patients: {
           ...state.patients,
-          [action.payload.patient.id]: {
-            ...action.payload.patient,
-            entries: action.payload.patient.entries
-              .concat(action.payload.newEntry)
+          [patientId]: {
+            ...patientData,
+            entries: patientData.entries.concat(newEntry)
+          }
+        },
+        patient: {
+          [patientId]: {
+            ...patientData,
+            entries: patientData.entries.concat(newEntry)
           }
         }
       };

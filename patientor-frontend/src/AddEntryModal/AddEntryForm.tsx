@@ -7,13 +7,20 @@ import {
   DiagnosisSelection,
   NumberField
 } from "../AddPatientModal/FormField";
-import { Diagnosis, EntryWithoutId } from "../types";
+import { Diagnosis, EntryTypes, EntryWithoutId } from "../types";
+import { SelectField, EntryOption } from "./FormField";
 
 interface Props {
   onSubmit: (values: EntryWithoutId) => void;
   onCancel: () => void;
   diagnoses: Diagnosis[];
 }
+
+const entryOptions: EntryOption[] = [
+  { value: EntryTypes.HospitalEntry, label: "Hospital" },
+  { value: EntryTypes.OccupationalHealthcareEntry, label: "OccupationalHealthcare" },
+  { value: EntryTypes.HealthCheckEntry, label: "HealthCheck" }
+];
 
 export const AddEntryForm = ({ onSubmit, onCancel, diagnoses } : Props ) => {
 
@@ -49,6 +56,11 @@ export const AddEntryForm = ({ onSubmit, onCancel, diagnoses } : Props ) => {
       {({ isValid, dirty, setFieldValue, setFieldTouched }) => {
         return (
           <Form className="form ui">
+            <SelectField
+              label="Entry Type"
+              name="type"
+              options={entryOptions}
+            />
             <Field
               label="Description"
               placeholder="Description"
