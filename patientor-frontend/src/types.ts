@@ -78,3 +78,5 @@ export enum EntryTypes {
   OccupationalHealthcareEntry = "OccupationalHealthcare",
   HealthCheckEntry = "HealthCheck"
 }
+
+export type BaseEntryWithoutId = Omit<BaseEntry, 'id'>;

@@ -7,7 +7,7 @@ import {
   DiagnosisSelection,
   NumberField
 } from "../AddPatientModal/FormField";
-import { Diagnosis, EntryTypes, EntryWithoutId } from "../types";
+import { Diagnosis, EntryTypes, EntryWithoutId, BaseEntryWithoutId } from "../types";
 import { SelectField, EntryOption } from "./FormField";
 
 interface Props {
@@ -22,18 +22,44 @@ const entryOptions: EntryOption[] = [
   { value: EntryTypes.HealthCheckEntry, label: "HealthCheck" }
 ];
 
-export const AddEntryForm = ({ onSubmit, onCancel, diagnoses } : Props ) => {
+const baseValues: BaseEntryWithoutId = {
+  description: "",
+  date: "",
+  specialist: "",
+  diagnosisCodes: [],
+};
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const hospitalValues: EntryWithoutId = {
+  ...baseValues,
+  type: "Hospital",
+  discharge: {
+    date: "",
+    criteria: ""
+  }
+};
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const occupationalHealthcare: EntryWithoutId = {
+  ...baseValues,
+  type: "OccupationalHealthcare",
+  employerName: "",
+  sickLeave: {
+    startDate: "",
+    endDate: ""
+  }
+};
+
+const healthCheckValues: EntryWithoutId = {
+  ...baseValues,
+  type: "HealthCheck",
+  healthCheckRating: 0,
+};
+
+export const AddEntryForm = ({ onSubmit, onCancel, diagnoses } : Props ) => {
   return (
     <Formik
-      initialValues={{
-        description: "",
-        date: "",
-        specialist: "",
-        diagnosisCodes: [],
-        type: "HealthCheck",
-        healthCheckRating: 0
-      }}
+      initialValues={healthCheckValues}
       onSubmit={onSubmit}
       validate={values => {
         const requiredError = "Field is required";
@@ -53,7 +79,7 @@ export const AddEntryForm = ({ onSubmit, onCancel, diagnoses } : Props ) => {
         return errors;
       }}
     >
-      {({ isValid, dirty, setFieldValue, setFieldTouched }) => {
+      {({ isValid, dirty, setFieldValue, setFieldTouched, values }) => {
         return (
           <Form className="form ui">
             <SelectField
@@ -84,13 +110,15 @@ export const AddEntryForm = ({ onSubmit, onCancel, diagnoses } : Props ) => {
               setFieldTouched={setFieldTouched}
               diagnoses={Object.values(diagnoses)}
             />
-            <Field
-              label="healthCheckRating"
-              name="healthCheckRating"
-              component={NumberField}
-              min={0}
-              max={3}
-            />
+            { values.type === "HealthCheck" && (
+              <Field
+                label="healthCheckRating"
+                name="healthCheckRating"
+                component={NumberField}
+                min={0}
+                max={3}
+              />
+            )}
             <Grid>
               <Grid.Column floated="left" width={5}>
                 <Button type="button" onClick={onCancel} color="red">
