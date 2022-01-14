@@ -1,7 +1,7 @@
 import React from "react";
 import { Field } from "formik";
 import { Form } from "semantic-ui-react";
-import { EntryTypes } from "../types";
+import { BaseEntryWithoutId, EntryTypes, EntryWithoutId } from "../types";
 
 // structure of a single option
 export type EntryOption = {
@@ -14,12 +14,14 @@ type SelectFieldProps = {
   name: string;
   label: string;
   options: EntryOption[];
+  // onChange: () => void;
 };
 
 export const SelectField = ({
   name,
   label,
-  options
+  options,
+  // onChange,
 }: SelectFieldProps) => (
   <Form.Field>
     <label>{label}</label>
@@ -32,3 +34,35 @@ export const SelectField = ({
     </Field>
   </Form.Field>
 );
+
+const baseValues: BaseEntryWithoutId = {
+  description: "",
+  date: "",
+  specialist: "",
+  diagnosisCodes: [],
+};
+
+export const hospitalValues: EntryWithoutId = {
+  ...baseValues,
+  type: "Hospital",
+  discharge: {
+    date: "",
+    criteria: ""
+  }
+};
+
+export const occupationalHealthcare: EntryWithoutId = {
+  ...baseValues,
+  type: "OccupationalHealthcare",
+  employerName: "",
+  sickLeave: {
+    startDate: "",
+    endDate: ""
+  }
+};
+
+export const healthCheckValues: EntryWithoutId = {
+  ...baseValues,
+  type: "HealthCheck",
+  healthCheckRating: 0,
+};
