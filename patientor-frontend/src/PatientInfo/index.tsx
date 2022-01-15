@@ -102,7 +102,7 @@ const PatientInfo = () => {
         </div>
       ))}
       <div style={{ marginTop: '15px' }}>
-        {healthCheckValues !== undefined && 
+        {validateEntryValues !== undefined && 
           <AddEntryModal
             modalOpen={modalOpen}
             onSubmit={submitNewEntry}
