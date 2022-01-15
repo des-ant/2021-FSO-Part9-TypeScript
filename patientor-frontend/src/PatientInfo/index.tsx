@@ -3,25 +3,31 @@ import { useParams } from 'react-router-dom';
 import axios from "axios";
 
 import { apiBaseUrl } from "../constants";
-import { Patient, Entry, EntryWithoutId } from "../types";
+import { Patient, Entry, EntryWithoutId, EntryTypes } from "../types";
 import { Header, Icon, Segment, Button } from 'semantic-ui-react';
 import EntryDetails from '../Entry/EntryDetails';
 import AddEntryModal from '../AddEntryModal';
-import { useStateValue, addEntry, setPatient } from "../state";
+import { useStateValue, addEntry, setPatient, setEntryType } from "../state";
 import {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   hospitalValues,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   occupationalHealthcareValues,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   healthCheckValues,
-  validateEntryValues
+  validateEntryValues,
+  EntryOption,
+  SelectField
 } from '../AddEntryModal/FormField';
+import { Form, Formik } from 'formik';
+
+const entryOptions: EntryOption[] = [
+  { value: EntryTypes.HospitalEntry, label: "Hospital" },
+  { value: EntryTypes.OccupationalHealthcareEntry, label: "OccupationalHealthcare" },
+  { value: EntryTypes.HealthCheckEntry, label: "HealthCheck" }
+];
 
 const PatientInfo = () => {
   const { id } = useParams<{ id: string }>();
   const [error, setError] = React.useState<string | undefined>();
-  const [{ diagnoses, patient }, dispatch] = useStateValue();
+  const [{ diagnoses, patient, entryType }, dispatch] = useStateValue();
   
   const [modalOpen, setModalOpen] = React.useState<boolean>(false);
 
@@ -92,7 +98,27 @@ const PatientInfo = () => {
       closeModal();
     } catch (e) {
       console.error(e.response?.data || 'Unknown Error');
-      setError(e.response?.data?.error || 'Unknown error');
+      setError(e.response?.data || 'Unknown error');
+    }
+  };
+
+  const submitEntryType = (values: {
+    type: string
+  }) => {
+    dispatch(setEntryType(values.type));
+    openModal();
+  };
+
+  const getInitialValues = () => {
+    switch (entryType) {
+      case "Hospital":
+        return hospitalValues;
+      case "OccupationalHealthcare":
+        return occupationalHealthcareValues;
+      case "HealthCheck":
+        return healthCheckValues;
+      default:
+        return hospitalValues;
     }
   };
 
@@ -117,11 +143,34 @@ const PatientInfo = () => {
             error={error}
             onClose={closeModal}
             diagnoses={Object.values(diagnoses)}
-            initialValues={hospitalValues}
+            initialValues={getInitialValues()}
             validate={validateEntryValues}
           />
         }
-        <Button onClick={() => openModal()}>Add New Entry</Button>
+        <Formik
+          initialValues={{
+            type: "Hospital"
+          }}
+          onSubmit={submitEntryType}
+          // validate={values => {
+          //   const requiredError = "Field is required";
+          //   const errors: { [field: string]: string } = {};
+          //   if (!values.type) {
+          //     errors.type = requiredError;
+          //   }
+          //   return errors;
+          // }}
+        >
+          <Form className="form ui" style={{ marginTop: '28px' }}>
+            <h3>Add New Entry</h3>
+            <SelectField
+              label="Entry Type"
+              name="type"
+              options={entryOptions}
+            />
+            <Button type="submit">Add New Entry</Button>
+          </Form>
+        </Formik>
       </div>
     </div>
   );

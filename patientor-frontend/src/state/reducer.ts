@@ -24,6 +24,10 @@ export type Action =
   | {
       type: "SET_PATIENT";
       payload: Patient;
+    }
+  | {
+      type: "SET_ENTRY_TYPE";
+      payload: string;
     };
 
 export const reducer = (state: State, action: Action): State => {
@@ -85,6 +89,11 @@ export const reducer = (state: State, action: Action): State => {
           [action.payload.id]: action.payload
         }
       };
+    case "SET_ENTRY_TYPE":
+      return {
+        ...state,
+        entryType: action.payload
+      };
     default:
       return state;
   }
@@ -125,5 +134,12 @@ export const setPatient = (patient: Patient): Action => {
   return {
     type: "SET_PATIENT",
     payload: patient
+  };
+};
+
+export const setEntryType = (type: string): Action => {
+  return {
+    type: "SET_ENTRY_TYPE",
+    payload: type
   };
 };

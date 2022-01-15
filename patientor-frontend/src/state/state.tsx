@@ -7,12 +7,14 @@ export type State = {
   patients: { [id: string]: Patient };
   diagnoses: { [code: string]: Diagnosis };
   patient: { [id: string]: Patient };
+  entryType: string;
 };
 
 const initialState: State = {
   patients: {},
   diagnoses: {},
   patient: {},
+  entryType: "Hospital",
 };
 
 export const StateContext = createContext<[State, React.Dispatch<Action>]>([

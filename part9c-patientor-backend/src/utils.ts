@@ -141,9 +141,9 @@ const parseEmployerName = (employerName: unknown): string => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const isSickLeave = (param: any): param is SickLeave => {
-  if (!param || !param.startDate || !param.endDate ||
+  if (param && (param.startDate || param.endDate) &&
     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    !isDate(param.startDate) || !isDate(param.endDate)) {
+    (!isDate(param.startDate) || !isDate(param.endDate))) {
     return false;
   }
   return true;

@@ -17,6 +17,69 @@ interface Props {
   validate: (values: EntryWithoutId) => { [field: string]: string; };
 }
 
+const EntryTypeForm: React.FC<{
+  values: EntryWithoutId
+}> = ({ values }) => {
+  switch (values.type) {
+    case "Hospital":
+      return (
+        <div style={{ marginBottom: "14px" }}>
+          <h4>Discharge Details</h4>
+          <Field
+            label="Discharge Date"
+            placeholder="YYYY-MM-DD"
+            name="discharge.date"
+            component={TextField}
+          />
+          <Field
+            label="Discharge Criteria"
+            placeholder="Discharge Criteria"
+            name="discharge.criteria"
+            component={TextField}
+          />
+        </div>
+      );
+    case "OccupationalHealthcare":
+      return (
+        <div style={{ marginBottom: "14px" }}>
+          <Field
+            label="Employer Name"
+            placeholder="Employer Name"
+            name="employerName"
+            component={TextField}
+          />
+          <div>
+            <h4>Sick Leave Details</h4>
+            <Field
+              label="Start Date"
+              placeholder="YYYY-MM-DD"
+              name="sickLeave.startDate"
+              component={TextField}
+            />
+            <Field
+              label="End Date"
+              placeholder="YYYY-MM-DD"
+              name="sickLeave.endDate"
+              component={TextField}
+            />
+          </div>
+        </div>
+      );
+    case "HealthCheck":
+      return (
+        <Field
+          label="Health Check Rationg"
+          name="healthCheckRating"
+          component={NumberField}
+          min={0}
+          max={3}
+        />
+      );
+    default:
+      return null;
+  }
+};
+
 export const AddEntryForm = ({ onSubmit, onCancel, diagnoses, initialValues, validate } : Props ) => {
   return (
     <Formik
@@ -51,57 +114,7 @@ export const AddEntryForm = ({ onSubmit, onCancel, diagnoses, initialValues, val
               setFieldTouched={setFieldTouched}
               diagnoses={Object.values(diagnoses)}
             />
-            { values.type === "Hospital" && (
-              <div style={{ marginBottom: "14px" }}>
-                <h4>Discharge Details</h4>
-                <Field
-                  label="Discharge Date"
-                  placeholder="YYYY-MM-DD"
-                  name="discharge.date"
-                  component={TextField}
-                />
-                <Field
-                  label="Discharge Criteria"
-                  placeholder="Discharge Criteria"
-                  name="discharge.criteria"
-                  component={TextField}
-                />
-              </div>
-            )}
-            { values.type === "OccupationalHealthcare" && (
-              <div style={{ marginBottom: "14px" }}>
-                <Field
-                  label="Employer Name"
-                  placeholder="Employer Name"
-                  name="employerName"
-                  component={TextField}
-                />
-                <div>
-                  <h4>Sick Leave Details</h4>
-                  <Field
-                    label="Start Date"
-                    placeholder="YYYY-MM-DD"
-                    name="sickLeave.startDate"
-                    component={TextField}
-                  />
-                  <Field
-                    label="End Date"
-                    placeholder="YYYY-MM-DD"
-                    name="sickLeave.endDate"
-                    component={TextField}
-                  />
-                </div>
-              </div>
-            )}
-            { values.type === "HealthCheck" && (
-              <Field
-                label="Health Check Rationg"
-                name="healthCheckRating"
-                component={NumberField}
-                min={0}
-                max={3}
-              />
-            )}
+            <EntryTypeForm values={values} />
             <Grid>
               <Grid.Column floated="left" width={5}>
                 <Button type="button" onClick={onCancel} color="red">
