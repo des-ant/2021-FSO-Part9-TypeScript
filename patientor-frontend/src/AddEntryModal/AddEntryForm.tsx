@@ -5,88 +5,29 @@ import { Field, Formik, Form } from "formik";
 import {
   TextField,
   DiagnosisSelection,
-  NumberField
+  NumberField,
 } from "../AddPatientModal/FormField";
-import { Diagnosis, EntryTypes, EntryWithoutId, BaseEntryWithoutId } from "../types";
-import { SelectField, EntryOption } from "./FormField";
+import { Diagnosis, EntryWithoutId } from "../types";
 
 interface Props {
   onSubmit: (values: EntryWithoutId) => void;
   onCancel: () => void;
   diagnoses: Diagnosis[];
+  initialValues: EntryWithoutId;
+  validate: (values: EntryWithoutId) => { [field: string]: string; };
 }
 
-const entryOptions: EntryOption[] = [
-  { value: EntryTypes.HospitalEntry, label: "Hospital" },
-  { value: EntryTypes.OccupationalHealthcareEntry, label: "OccupationalHealthcare" },
-  { value: EntryTypes.HealthCheckEntry, label: "HealthCheck" }
-];
-
-const baseValues: BaseEntryWithoutId = {
-  description: "",
-  date: "",
-  specialist: "",
-  diagnosisCodes: [],
-};
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const hospitalValues: EntryWithoutId = {
-  ...baseValues,
-  type: "Hospital",
-  discharge: {
-    date: "",
-    criteria: ""
-  }
-};
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const occupationalHealthcare: EntryWithoutId = {
-  ...baseValues,
-  type: "OccupationalHealthcare",
-  employerName: "",
-  sickLeave: {
-    startDate: "",
-    endDate: ""
-  }
-};
-
-const healthCheckValues: EntryWithoutId = {
-  ...baseValues,
-  type: "HealthCheck",
-  healthCheckRating: 0,
-};
-
-export const AddEntryForm = ({ onSubmit, onCancel, diagnoses } : Props ) => {
+export const AddEntryForm = ({ onSubmit, onCancel, diagnoses, initialValues, validate } : Props ) => {
   return (
     <Formik
-      initialValues={healthCheckValues}
+      initialValues={initialValues}
+      enableReinitialize
       onSubmit={onSubmit}
-      validate={values => {
-        const requiredError = "Field is required";
-        const errors: { [field: string]: string } = {};
-        if (!values.description) {
-          errors.description = requiredError;
-        }
-        if (!values.date) {
-          errors.date = requiredError;
-        }
-        if (!values.specialist) {
-          errors.specialist = requiredError;
-        }
-        if (!values.type) {
-          errors.type = requiredError;
-        }
-        return errors;
-      }}
+      validate={validate}
     >
       {({ isValid, dirty, setFieldValue, setFieldTouched, values }) => {
         return (
           <Form className="form ui">
-            <SelectField
-              label="Entry Type"
-              name="type"
-              options={entryOptions}
-            />
             <Field
               label="Description"
               placeholder="Description"
@@ -94,14 +35,14 @@ export const AddEntryForm = ({ onSubmit, onCancel, diagnoses } : Props ) => {
               component={TextField}
             />
             <Field
-              label="Date Of Entry"
+              label="Date of Entry"
               placeholder="YYYY-MM-DD"
               name="date"
               component={TextField}
             />
             <Field
-              label="Name Of Specialist"
-              placeholder="Name Of Specialist"
+              label="Name of Specialist"
+              placeholder="Name of Specialist"
               name="specialist"
               component={TextField}
             />
@@ -110,9 +51,26 @@ export const AddEntryForm = ({ onSubmit, onCancel, diagnoses } : Props ) => {
               setFieldTouched={setFieldTouched}
               diagnoses={Object.values(diagnoses)}
             />
+            { values.type === "Hospital" && (
+              <div>
+                <h3>Discharge Details</h3>
+                <Field
+                  label="Discharge Date"
+                  placeholder="YYYY-MM-DD"
+                  name="dischargeDate"
+                  component={TextField}
+                />
+                <Field
+                  label="Discharge Criteria"
+                  placeholder="Discharge Criteria"
+                  name="dischargeCriteria"
+                  component={TextField}
+                />
+              </div>
+            )}
             { values.type === "HealthCheck" && (
               <Field
-                label="healthCheckRating"
+                label="Health Check Rationg"
                 name="healthCheckRating"
                 component={NumberField}
                 min={0}

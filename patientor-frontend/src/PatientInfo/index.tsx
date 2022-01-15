@@ -8,6 +8,7 @@ import { Header, Icon, Segment, Button } from 'semantic-ui-react';
 import EntryDetails from '../Entry/EntryDetails';
 import AddEntryModal from '../AddEntryModal';
 import { useStateValue, addEntry, setPatient } from "../state";
+import { healthCheckValues, validateEntryValues } from '../AddEntryModal/FormField';
 
 const PatientInfo = () => {
   const { id } = useParams<{ id: string }>();
@@ -101,13 +102,17 @@ const PatientInfo = () => {
         </div>
       ))}
       <div style={{ marginTop: '15px' }}>
-        <AddEntryModal
-          modalOpen={modalOpen}
-          onSubmit={submitNewEntry}
-          error={error}
-          onClose={closeModal}
-          diagnoses={Object.values(diagnoses)}
-        />
+        {healthCheckValues !== undefined && 
+          <AddEntryModal
+            modalOpen={modalOpen}
+            onSubmit={submitNewEntry}
+            error={error}
+            onClose={closeModal}
+            diagnoses={Object.values(diagnoses)}
+            initialValues={healthCheckValues}
+            validate={validateEntryValues}
+          />
+        }
         <Button onClick={() => openModal()}>Add New Entry</Button>
       </div>
     </div>

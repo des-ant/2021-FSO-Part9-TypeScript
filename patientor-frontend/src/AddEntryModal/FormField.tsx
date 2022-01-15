@@ -66,3 +66,24 @@ export const healthCheckValues: EntryWithoutId = {
   type: "HealthCheck",
   healthCheckRating: 0,
 };
+
+export const validateEntryValues = (values: EntryWithoutId) => {
+  const requiredError = "Field is required";
+  const errors: { [field: string]: string } = {};
+  if (!values.description) {
+    errors.description = requiredError;
+  }
+  if (!values.date) {
+    errors.date = requiredError;
+  }
+  if (!values.specialist) {
+    errors.specialist = requiredError;
+  }
+  if (!values.type) {
+    errors.type = requiredError;
+  }
+  if ("healthCheckRating" in values && !values.healthCheckRating) {
+    errors.healthCheckRating = requiredError;
+  }
+  return errors;
+};
