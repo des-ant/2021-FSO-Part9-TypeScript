@@ -8,7 +8,15 @@ import { Header, Icon, Segment, Button } from 'semantic-ui-react';
 import EntryDetails from '../Entry/EntryDetails';
 import AddEntryModal from '../AddEntryModal';
 import { useStateValue, addEntry, setPatient } from "../state";
-import { healthCheckValues, validateEntryValues } from '../AddEntryModal/FormField';
+import {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  hospitalValues,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  occupationalHealthcareValues,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  healthCheckValues,
+  validateEntryValues
+} from '../AddEntryModal/FormField';
 
 const PatientInfo = () => {
   const { id } = useParams<{ id: string }>();
@@ -101,7 +109,7 @@ const PatientInfo = () => {
           {renderEntries(p.entries)}
         </div>
       ))}
-      <div style={{ marginTop: '15px' }}>
+      <div style={{ marginTop: '14px' }}>
         {validateEntryValues !== undefined && 
           <AddEntryModal
             modalOpen={modalOpen}
@@ -109,7 +117,7 @@ const PatientInfo = () => {
             error={error}
             onClose={closeModal}
             diagnoses={Object.values(diagnoses)}
-            initialValues={healthCheckValues}
+            initialValues={hospitalValues}
             validate={validateEntryValues}
           />
         }

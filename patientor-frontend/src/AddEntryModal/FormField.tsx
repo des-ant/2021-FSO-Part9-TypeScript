@@ -51,7 +51,7 @@ export const hospitalValues: EntryWithoutId = {
   }
 };
 
-export const occupationalHealthcare: EntryWithoutId = {
+export const occupationalHealthcareValues: EntryWithoutId = {
   ...baseValues,
   type: "OccupationalHealthcare",
   employerName: "",
@@ -82,8 +82,23 @@ export const validateEntryValues = (values: EntryWithoutId) => {
   if (!values.type) {
     errors.type = requiredError;
   }
-  if ("healthCheckRating" in values && !values.healthCheckRating) {
-    errors.healthCheckRating = requiredError;
+
+  if (values.type === "Hospital") {
+    if (!values.discharge.date) {
+      errors.discharge = requiredError;
+    }
+    if (!values.discharge.criteria) {
+      errors.discharge = requiredError;
+    }
+  } else if (values.type === "OccupationalHealthcare") {
+    if (!values.employerName) {
+      errors.employerName = requiredError;
+    }
+  } else if (values.type === "HealthCheck") {
+    if (!values.healthCheckRating) {
+      errors.healthCheckRating = requiredError;
+    }
   }
+
   return errors;
 };

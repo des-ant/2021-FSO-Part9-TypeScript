@@ -52,20 +52,45 @@ export const AddEntryForm = ({ onSubmit, onCancel, diagnoses, initialValues, val
               diagnoses={Object.values(diagnoses)}
             />
             { values.type === "Hospital" && (
-              <div>
-                <h3>Discharge Details</h3>
+              <div style={{ marginBottom: "14px" }}>
+                <h4>Discharge Details</h4>
                 <Field
                   label="Discharge Date"
                   placeholder="YYYY-MM-DD"
-                  name="dischargeDate"
+                  name="discharge.date"
                   component={TextField}
                 />
                 <Field
                   label="Discharge Criteria"
                   placeholder="Discharge Criteria"
-                  name="dischargeCriteria"
+                  name="discharge.criteria"
                   component={TextField}
                 />
+              </div>
+            )}
+            { values.type === "OccupationalHealthcare" && (
+              <div style={{ marginBottom: "14px" }}>
+                <Field
+                  label="Employer Name"
+                  placeholder="Employer Name"
+                  name="employerName"
+                  component={TextField}
+                />
+                <div>
+                  <h4>Sick Leave Details</h4>
+                  <Field
+                    label="Start Date"
+                    placeholder="YYYY-MM-DD"
+                    name="sickLeave.startDate"
+                    component={TextField}
+                  />
+                  <Field
+                    label="End Date"
+                    placeholder="YYYY-MM-DD"
+                    name="sickLeave.endDate"
+                    component={TextField}
+                  />
+                </div>
               </div>
             )}
             { values.type === "HealthCheck" && (
